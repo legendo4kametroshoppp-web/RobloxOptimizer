@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roblox Optimizer: Roblox без лагів</title>
+<meta name="description" content="Roblox Optimizer для ПК та Android: прибирає зайві ефекти, чистить кеш і піднімає FPS.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,500;0,700;0,900;1,800;1,900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0b08;--panel:#16140e;--panel2:#1d1a12;--line:#2d2916;--y:#ffd51f;--o:#ffa400;--tx:#f6f2e3;--mut:#a39e88;--ok:#5dff7a}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:Rubik,"Segoe UI",system-ui,sans-serif;line-height:1.55;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(900px 600px at 78% 8%,rgba(255,200,0,.16),transparent 60%),radial-gradient(700px 500px at 0% 90%,rgba(255,150,0,.09),transparent 60%)}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--y);outline-offset:3px}
+.w{max-width:1240px;margin:auto;padding:0 5vw}
+
+/* шапка */
+.top{display:flex;justify-content:space-between;align-items:center;padding:24px 0}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:700;font-size:1.15rem}
+.mark{width:34px;height:34px;border-radius:10px;background:var(--y);display:grid;place-items:center;transform:rotate(-10deg);box-shadow:0 0 22px rgba(255,213,31,.7)}
+.mark::after{content:"";width:13px;height:13px;border-radius:3px;background:var(--bg)}
+.brand span{animation:flick 1.6s steps(1) 1}
+@keyframes flick{0%{opacity:.1}8%{opacity:1}12%{opacity:.2}18%{opacity:1}24%{opacity:.4}30%,100%{opacity:1}}
+.top nav{display:flex;gap:30px;align-items:center}
+.top nav a{text-decoration:none;color:var(--mut);transition:color .2s}
+.top nav a:hover{color:var(--y)}
+
+/* кнопки */
+.btn{position:relative;display:inline-flex;align-items:center;gap:12px;padding:17px 30px;border-radius:999px;font:700 1.05rem Rubik,sans-serif;text-decoration:none;border:0;cursor:pointer;overflow:hidden;transition:transform .2s,box-shadow .25s,background .25s,color .25s}
+.btn svg{width:22px;height:22px;fill:currentColor;flex:none}
+.btn::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);transition:left .6s}
+.btn:hover::after{left:130%}
+.btn:hover{transform:translateY(-3px)}
+.btn.fill{background:linear-gradient(180deg,#ffe45c,var(--o));color:#1a1400;box-shadow:0 0 0 1px #ffe98a inset,0 0 24px rgba(255,200,0,.7),0 0 70px rgba(255,190,0,.3)}
+.btn.fill:hover{box-shadow:0 0 0 1px #fff2b0 inset,0 0 40px var(--y),0 0 110px rgba(255,200,0,.5)}
+.btn.ring{color:var(--y);background:transparent;box-shadow:0 0 0 2px var(--y) inset,0 0 20px rgba(255,213,31,.4),0 0 20px rgba(255,213,31,.18) inset}
+.btn.ring:hover{background:var(--y);color:#1a1400;box-shadow:0 0 0 2px var(--y) inset,0 0 44px var(--y)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.25fr);gap:56px;align-items:center;padding:30px 0 90px}
+h1{font-size:clamp(2.8rem,6.4vw,5.6rem);line-height:.98;font-weight:900;font-style:italic;letter-spacing:-.03em;margin-bottom:26px}
+h1 b{display:block;color:var(--y);text-shadow:0 0 18px rgba(255,213,31,.75),0 0 60px rgba(255,170,0,.45)}
+.lead{font-size:1.15rem;color:var(--mut);max-width:30em;margin-bottom:34px}
+.btns{display:flex;flex-wrap:wrap;gap:16px}
+.hint{margin-top:22px;color:var(--mut);font-size:.92rem}
+.hint i{font-style:normal;color:var(--y)}
+
+/* демо-лаунчер */
+.app{background:#0f0e0a;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,213,31,.12),0 30px 90px rgba(0,0,0,.7),0 0 120px rgba(255,190,0,.14);animation:rise .9s cubic-bezier(.2,.8,.2,1) .15s both}
+@keyframes rise{from{opacity:0;transform:translateY(40px) rotate(1.5deg)}}
+.tb{display:flex;align-items:center;gap:10px;padding:12px 16px;font-weight:500;font-size:.9rem;border-bottom:1px solid var(--line)}
+.tb .mark{width:22px;height:22px;border-radius:6px;transform:none;box-shadow:none}.tb .mark::after{width:8px;height:8px;border-radius:2px}
+.tb em{margin-left:auto;font-style:normal;color:var(--mut);font-size:.75rem}
+.body{display:grid;grid-template-columns:150px 1fr}
+.side{padding:16px 12px;display:flex;flex-direction:column;gap:6px;border-right:1px solid var(--line)}
+.side div{padding:11px 14px;border-radius:12px;font-size:.88rem;color:var(--mut)}
+.side .on{background:linear-gradient(180deg,#a8840e,#7d6209);color:#fff;font-weight:500}
+.main{padding:16px;display:grid;grid-template-columns:1.15fr 1fr;gap:14px}
+.pn{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+.pn h4{font-size:.98rem;margin-bottom:12px}
+.ram{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ram small{display:block;color:var(--mut);font-size:.75rem}
+.ram strong{font-size:1.7rem;color:var(--y);font-style:italic;font-weight:900;text-shadow:0 0 14px rgba(255,213,31,.55)}
+.fps{text-align:right}
+.go{width:100%;padding:14px;border-radius:12px;border:0;font:800 1rem Rubik,sans-serif;color:#1a1400;background:linear-gradient(180deg,#ffe45c,var(--o));cursor:pointer;box-shadow:0 0 20px rgba(255,200,0,.5);transition:box-shadow .2s,transform .2s}
+.go:hover{box-shadow:0 0 34px var(--y);transform:translateY(-1px)}
+.sec{width:100%;margin-top:10px;padding:10px;border-radius:12px;background:transparent;border:1px solid var(--line);color:var(--tx);font:500 .85rem Rubik,sans-serif;cursor:pointer}
+.chk{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:.88rem;cursor:pointer;user-select:none}
+.chk input{position:absolute;opacity:0}
+.chk i{width:20px;height:20px;border-radius:6px;background:#26220f;border:2px solid #4b4318;display:grid;place-items:center;flex:none;transition:.15s}
+.chk input:checked+i{background:var(--y);border-color:var(--y);box-shadow:0 0 10px rgba(255,213,31,.7)}
+.chk input:checked+i::after{content:"";width:5px;height:10px;border:solid #1a1400;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.chk input:focus-visible+i{outline:3px solid #fff;outline-offset:2px}
+.apply{width:100%;margin-top:10px;padding:10px;border-radius:10px;background:transparent;border:1.5px solid var(--y);color:var(--y);font:700 .85rem Rubik,sans-serif;cursor:pointer;position:relative;overflow:hidden}
+.apply .f{position:absolute;inset:0;width:0;background:var(--y);z-index:0}
+.apply span{position:relative;z-index:1;mix-blend-mode:normal}
+.st{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;font-size:.85rem}
+.st dt{color:var(--mut)}.st dd.ok{color:var(--ok);font-weight:700}.st dd.off{color:var(--mut)}
+
+/* секції */
+section{padding:90px 0;border-top:1px solid var(--line)}
+h2{font-size:clamp(1.9rem,4vw,3rem);font-weight:900;font-style:italic;letter-spacing:-.02em;line-height:1.05;margin-bottom:18px}
+.two{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:70px}
+.two>div:first-child p{color:var(--mut);max-width:26em}
+.rows>div{display:grid;grid-template-columns:64px 1fr;gap:20px;padding:26px 0;border-bottom:1px solid var(--line)}
+.rows>div:first-child{padding-top:0}
+.rows b{display:block;font-size:1.25rem;margin-bottom:4px}
+.rows p{color:var(--mut)}
+.rows .ic{width:52px;height:52px;border-radius:14px;background:var(--panel2);border:1px solid var(--line);display:grid;place-items:center;font-size:1.5rem;transition:.25s}
+.rows>div:hover .ic{border-color:var(--y);box-shadow:0 0 22px rgba(255,213,31,.45);transform:rotate(-6deg)}
+.shotbox{margin-top:50px;border-radius:18px;padding:10px;background:linear-gradient(135deg,rgba(255,213,31,.5),rgba(255,213,31,.04) 60%);box-shadow:0 0 80px rgba(255,190,0,.18)}
+.shotbox img{display:block;width:100%;border-radius:12px}
+.dl{display:grid;grid-template-columns:1.3fr 1fr;gap:22px;margin-top:40px}
+.big{border-radius:26px;padding:44px;position:relative;overflow:hidden}
+.big.pcb{background:linear-gradient(150deg,#ffdf40,var(--o));color:#1a1400;box-shadow:0 0 80px rgba(255,190,0,.3)}
+.big.anb{background:var(--panel);border:2px solid var(--y);box-shadow:0 0 36px rgba(255,213,31,.22),inset 0 0 40px rgba(255,213,31,.06)}
+.big h3{font-size:2rem;font-weight:900;font-style:italic;margin-bottom:8px}
+.big p{margin-bottom:26px;max-width:22em}
+.pcb p{color:#4a3a00}.anb p{color:var(--mut)}
+.pcb .btn{background:#1a1400;color:var(--y);box-shadow:0 0 0 2px #1a1400}
+.pcb .btn:hover{box-shadow:0 0 0 2px #1a1400,0 12px 30px rgba(0,0,0,.4)}
+.phone{position:absolute;right:26px;bottom:-60px;width:110px;height:210px;border-radius:24px;border:3px solid var(--y);background:#0f0e0a;box-shadow:0 0 24px rgba(255,213,31,.5);transform:rotate(8deg)}
+.phone::before{content:"";position:absolute;left:50%;top:8px;width:30px;height:5px;border-radius:5px;background:var(--line);transform:translateX(-50%)}
+.phone::after{content:"";position:absolute;left:18px;right:18px;top:48px;height:44px;border-radius:12px;background:linear-gradient(180deg,#ffe45c,var(--o));box-shadow:0 0 16px rgba(255,200,0,.7)}
+.pcb .big-ic{position:absolute;right:30px;top:24px;font-size:4rem;opacity:.9}
+.faq{max-width:760px;margin-top:36px}
+details{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;padding:22px 0;font-weight:700;font-size:1.1rem;list-style:none;display:flex;justify-content:space-between;gap:20px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--y);font-size:1.6rem;line-height:1;transition:transform .25s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{padding:0 0 22px;color:var(--mut);max-width:40em}
+footer{border-top:1px solid var(--line);padding:36px 0 50px;color:var(--mut);font-size:.88rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
+footer a{text-decoration:none;margin-left:22px}footer a:hover{color:var(--y)}
+
+.lang{display:inline-flex;align-items:center;gap:2px;padding:5px;border-radius:999px;border:1px solid var(--line);background:var(--panel)}
+.lang .gl{padding:0 8px 0 10px;font-size:1.05rem}
+.lang button{border:0;background:transparent;color:var(--mut);font:700 .85rem Rubik,sans-serif;padding:9px 14px;border-radius:999px;cursor:pointer;transition:.2s}
+.lang button:hover{color:var(--tx)}
+.lang button[aria-pressed=true]{background:var(--y);color:#1a1400;box-shadow:0 0 16px rgba(255,213,31,.65)}
+.top .lang{padding:3px}.top .lang button{padding:6px 11px;font-size:.78rem}
+.btns .lang{align-self:center}
+@media(max-width:960px){.hero,.two,.dl{grid-template-columns:1fr}.two{gap:36px}.top nav a:not(.btn){display:none}.phone{display:none}}
+@media(max-width:620px){.body{grid-template-columns:1fr}.side{display:none}.main{grid-template-columns:1fr}.big{padding:30px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="w">
+  <header class="top">
+    <a class="brand" href="#"><i class="mark"></i><span>Roblox Optimizer</span></a>
+    <nav><a href="#inside" data-i18n="n1">Що вміє</a><a href="#download" data-i18n="n2">Завантажити</a><a href="#faq" data-i18n="n3">Питання</a><div class="lang" role="group" aria-label="Language"><button data-l="uk">UA</button><button data-l="ru">RU</button><button data-l="en">EN</button></div></nav>
+  </header>
+
+  <div class="hero">
+    <div>
+      <h1 data-i18n="h1">Roblox без лагів.<b>Один клік.</b></h1>
+      <p class="lead" data-i18n="lead">Прибирає зайві ефекти, налаштовує графіку, чистить кеш і піднімає FPS. Працює на Windows та Android.</p>
+      <div class="btns">
+        <a class="btn fill" href="RobloxOptimizer.exe" download><svg viewBox="0 0 24 24"><path d="M3 5.5 10.5 4.5v6.7H3zM11.5 4.4 21 3v8.2h-9.5zM3 12.2h7.5v6.6L3 17.8zM11.5 12.2H21V21l-9.5-1.3z"/></svg><span data-i18n="dlpc">Завантажити для ПК</span></a>
+        <a class="btn ring" href="RobloxOptimizer.apk" download><svg viewBox="0 0 24 24"><path d="M6 18c0 .6.4 1 1 1h1v3.2a1.3 1.3 0 0 0 2.6 0V19h2.8v3.2a1.3 1.3 0 0 0 2.6 0V19h1c.6 0 1-.4 1-1V8H6zM3.5 8a1.3 1.3 0 0 0-1.3 1.3v6a1.3 1.3 0 0 0 2.6 0v-6A1.3 1.3 0 0 0 3.5 8zm17 0a1.3 1.3 0 0 0-1.3 1.3v6a1.3 1.3 0 0 0 2.6 0v-6A1.3 1.3 0 0 0 20.5 8zM15.5 2.2l1.2-1.8-.5-.3-1.3 1.9A6.3 6.3 0 0 0 12 1.4c-.9 0-1.8.2-2.6.6L8.1.1l-.5.3 1.2 1.8C7.200 3.100 6.100 4.600 6 6.500h12c-.1-1.900-1.200-3.400-2.500-4.300z"/></svg><span data-i18n="dlan">Для Android</span></a>
+        <div class="lang" role="group" aria-label="Мова / Language / Язык"><span class="gl">🌐</span><button data-l="uk">Українська</button><button data-l="ru">Русский</button><button data-l="en">English</button></div>
+      </div>
+      <p class="hint" data-i18n="hint"><i>→</i> Праворуч демо програми. Познач пункти й натисни «Застосувати».</p>
+    </div>
+
+    <div class="app" aria-label="Демо програми Roblox Optimizer">
+      <div class="tb"><i class="mark"></i>Roblox Optimizer<em data-i18n="demo">демо</em></div>
+      <div class="body">
+        <div class="side"><div class="on" data-i18n="s1">Головна</div><div data-i18n="s2">Оптимізація</div><div data-i18n="s3">Налаштування</div><div data-i18n="s4">Про програму</div></div>
+        <div class="main">
+          <div class="pn ram">
+            <div><small data-i18n="ramL">Вільно ОЗП</small><strong id="ram">5.9 ГБ</strong></div>
+            <div class="fps"><small data-i18n="fpsL">FPS у грі</small><strong id="fps">41</strong></div>
+          </div>
+          <div class="pn">
+            <h4 data-i18n="launchH">Запуск Roblox</h4>
+            <button class="go" id="launch">▶ Запустити Roblox</button>
+            <button class="sec" type="button" data-i18n="openF">Відкрити папку Roblox</button>
+          </div>
+          <div class="pn">
+            <h4 data-i18n="optH">Оптимізація гри</h4>
+            <label class="chk"><input type="checkbox" data-fps="6" checked><i></i><span data-i18n="c1">Прибрати зайві ефекти</span></label>
+            <label class="chk"><input type="checkbox" data-fps="9" checked><i></i><span data-i18n="c2">Оптимізувати графіку</span></label>
+            <label class="chk"><input type="checkbox" data-fps="7" data-ram="0.6" checked><i></i><span data-i18n="c3">Очистити кеш</span></label>
+            <label class="chk"><input type="checkbox" data-fps="14" checked><i></i><span data-i18n="c4">Збільшити FPS</span></label>
+            <button class="apply" id="apply"><b class="f"></b><span id="applyL">Застосувати оптимізацію</span></button>
+          </div>
+          <div class="pn" style="grid-column:1/-1">
+            <h4 data-i18n="statH">Статус</h4>
+            <dl class="st"><dt data-i18n="statL">Статус:</dt><dd id="stat" class="off">Roblox не запущено</dd><dt data-i18n="platL">Платформа:</dt><dd>Windows</dd></dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="w">
+  <section id="inside">
+    <div class="two">
+      <div>
+        <h2 data-i18n="i1">Чотири галочки замість годин налаштувань</h2>
+        <p data-i18n="i2">Усе, що зазвичай роблять руками в налаштуваннях і папках, програма робить сама.</p>
+      </div>
+      <div class="rows">
+        <div><span class="ic">✨</span><div><b data-i18n="r1t">Прибрати зайві ефекти</b><p data-i18n="r1d">Вимикає важкі візуальні ефекти, які з'їдають кадри.</p></div></div>
+        <div><span class="ic">🎮</span><div><b data-i18n="r2t">Оптимізувати графіку</b><p data-i18n="r2d">Підбирає параметри під твій комп'ютер.</p></div></div>
+        <div><span class="ic">🧹</span><div><b data-i18n="r3t">Очистити кеш</b><p data-i18n="r3d">Видаляє сміття Roblox і звільняє пам'ять.</p></div></div>
+        <div><span class="ic">🚀</span><div><b data-i18n="r4t">Збільшити FPS</b><p data-i18n="r4d">Застосовує всі вибрані зміни однією кнопкою.</p></div></div>
+      </div>
+    </div>
+    <div class="shotbox"><img src="screenshot.png" alt="Справжній інтерфейс Roblox Optimizer" loading="lazy"></div>
+  </section>
+
+  <section id="download">
+    <h2 data-i18n="dlH">Завантаж свою версію</h2>
+    <div class="dl">
+      <div class="big pcb">
+        <span class="big-ic">💻</span>
+        <h3>Windows</h3>
+        <p data-i18n="pcP">Файл RobloxOptimizer.exe. Запускай і оптимізуй.</p>
+        <a class="btn" href="RobloxOptimizer.exe" download><span data-i18n="getExe">Скачати .exe</span></a>
+      </div>
+      <div class="big anb">
+        <div class="phone"></div>
+        <h3>Android</h3>
+        <p data-i18n="anP">Файл RobloxOptimizer.apk для телефону.</p>
+        <a class="btn ring" href="RobloxOptimizer.apk" download><span data-i18n="getApk">Скачати .apk</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <h2 data-i18n="faqH">Питання, які ставлять частіше за все</h2>
+    <div class="faq">
+      <details><summary data-i18n="q1">Програма безкоштовна?</summary><p data-i18n="a1">Так, завантаження й користування безкоштовні.</p></details>
+      <details><summary data-i18n="q2">Як встановити .apk на Android?</summary><p data-i18n="a2">Завантаж файл і відкрий його. Якщо телефон запитає, дозволь встановлення з цього джерела в налаштуваннях.</p></details>
+      <details><summary data-i18n="q3">Windows попереджає про запуск .exe. Що робити?</summary><p data-i18n="a3">Натисни «Докладніше», потім «Все одно виконати». Таке попередження з'являється для програм без цифрового підпису.</p></details>
+    </div>
+  </section>
+
+  <footer>
+    <div data-i18n="foot">© 2026 Roblox Optimizer. Не є офіційним продуктом Roblox Corporation.</div>
+    <div><a href="RobloxOptimizer.exe" download>Windows</a><a href="RobloxOptimizer.apk" download>Android</a></div>
+  </footer>
+</div>
+
+<script>
+const L={"uk": {"title": "Roblox Optimizer: Roblox без лагів", "n1": "Що вміє", "n2": "Завантажити", "n3": "Питання", "h1": "Roblox без лагів.<b>Один клік.</b>", "lead": "Прибирає зайві ефекти, налаштовує графіку, чистить кеш і піднімає FPS. Працює на Windows та Android.", "dlpc": "Завантажити для ПК", "dlan": "Для Android", "hint": "<i>→</i> Спробуй демо програми: познач пункти й натисни «Застосувати».", "demo": "демо", "s1": "Головна", "s2": "Оптимізація", "s3": "Налаштування", "s4": "Про програму", "ramL": "Вільно ОЗП", "fpsL": "FPS у грі", "launchH": "Запуск Roblox", "openF": "Відкрити папку Roblox", "optH": "Оптимізація гри", "c1": "Прибрати зайві ефекти", "c2": "Оптимізувати графіку", "c3": "Очистити кеш", "c4": "Збільшити FPS", "apply": "Застосувати оптимізацію", "statH": "Статус", "statL": "Статус:", "platL": "Платформа:", "gb": "ГБ", "stOn": "Roblox запущено", "stOff": "Roblox не запущено", "btnStart": "▶ Запустити Roblox", "btnStop": "■ Зупинити Roblox", "busy": "Оптимізую...", "done": "Готово ✓", "i1": "Чотири галочки замість годин налаштувань", "i2": "Усе, що зазвичай роблять руками в налаштуваннях і папках, програма робить сама.", "r1t": "Прибрати зайві ефекти", "r1d": "Вимикає важкі візуальні ефекти, які з'їдають кадри.", "r2t": "Оптимізувати графіку", "r2d": "Підбирає параметри під твій комп'ютер.", "r3t": "Очистити кеш", "r3d": "Видаляє сміття Roblox і звільняє пам'ять.", "r4t": "Збільшити FPS", "r4d": "Застосовує всі вибрані зміни однією кнопкою.", "dlH": "Завантаж свою версію", "pcP": "Файл RobloxOptimizer.exe. Запускай і оптимізуй.", "getExe": "Скачати .exe", "anP": "Файл RobloxOptimizer.apk для телефону.", "getApk": "Скачати .apk", "faqH": "Питання, які ставлять частіше за все", "q1": "Програма безкоштовна?", "a1": "Так, завантаження й користування безкоштовні.", "q2": "Як встановити .apk на Android?", "a2": "Завантаж файл і відкрий його. Якщо телефон запитає, дозволь встановлення з цього джерела в налаштуваннях.", "q3": "Windows попереджає про запуск .exe. Що робити?", "a3": "Натисни «Докладніше», потім «Все одно виконати». Таке попередження з'являється для програм без цифрового підпису.", "foot": "© 2026 Roblox Optimizer. Не є офіційним продуктом Roblox Corporation."}, "ru": {"title": "Roblox Optimizer: Roblox без лагов", "n1": "Возможности", "n2": "Скачать", "n3": "Вопросы", "h1": "Roblox без лагов.<b>Один клик.</b>", "lead": "Убирает лишние эффекты, настраивает графику, чистит кэш и повышает FPS. Работает на Windows и Android.", "dlpc": "Скачать для ПК", "dlan": "Для Android", "hint": "<i>→</i> Попробуй демо программы: отметь пункты и нажми «Применить».", "demo": "демо", "s1": "Главная", "s2": "Оптимизация", "s3": "Настройки", "s4": "О программе", "ramL": "Свободно ОЗУ", "fpsL": "FPS в игре", "launchH": "Запуск Roblox", "openF": "Открыть папку Roblox", "optH": "Оптимизация игры", "c1": "Убрать лишние эффекты", "c2": "Оптимизировать графику", "c3": "Очистить кэш", "c4": "Увеличить FPS", "apply": "Применить оптимизацию", "statH": "Статус", "statL": "Статус:", "platL": "Платформа:", "gb": "ГБ", "stOn": "Roblox запущен", "stOff": "Roblox не запущен", "btnStart": "▶ Запустить Roblox", "btnStop": "■ Остановить Roblox", "busy": "Оптимизирую...", "done": "Готово ✓", "i1": "Четыре галочки вместо часов настройки", "i2": "Всё, что обычно делают руками в настройках и папках, программа делает сама.", "r1t": "Убрать лишние эффекты", "r1d": "Отключает тяжёлые визуальные эффекты, которые съедают кадры.", "r2t": "Оптимизировать графику", "r2d": "Подбирает параметры под твой компьютер.", "r3t": "Очистить кэш", "r3d": "Удаляет мусор Roblox и освобождает память.", "r4t": "Увеличить FPS", "r4d": "Применяет все выбранные изменения одной кнопкой.", "dlH": "Скачай свою версию", "pcP": "Файл RobloxOptimizer.exe. Запускай и оптимизируй.", "getExe": "Скачать .exe", "anP": "Файл RobloxOptimizer.apk для телефона.", "getApk": "Скачать .apk", "faqH": "Вопросы, которые задают чаще всего", "q1": "Программа бесплатная?", "a1": "Да, скачивание и использование бесплатны.", "q2": "Как установить .apk на Android?", "a2": "Скачай файл и открой его. Если телефон спросит, разреши установку из этого источника в настройках.", "q3": "Windows предупреждает при запуске .exe. Что делать?", "a3": "Нажми «Подробнее», затем «Выполнить в любом случае». Такое предупреждение появляется у программ без цифровой подписи.", "foot": "© 2026 Roblox Optimizer. Не является официальным продуктом Roblox Corporation."}, "en": {"title": "Roblox Optimizer: Roblox without lag", "n1": "Features", "n2": "Download", "n3": "FAQ", "h1": "Roblox without lag.<b>One click.</b>", "lead": "Removes extra effects, tunes graphics, clears the cache and boosts FPS. Works on Windows and Android.", "dlpc": "Download for PC", "dlan": "For Android", "hint": "<i>→</i> Try the app demo: tick the options and hit Apply.", "demo": "demo", "s1": "Home", "s2": "Optimization", "s3": "Settings", "s4": "About", "ramL": "Free RAM", "fpsL": "In-game FPS", "launchH": "Launch Roblox", "openF": "Open Roblox folder", "optH": "Game optimization", "c1": "Remove extra effects", "c2": "Optimize graphics", "c3": "Clear cache", "c4": "Boost FPS", "apply": "Apply optimization", "statH": "Status", "statL": "Status:", "platL": "Platform:", "gb": "GB", "stOn": "Roblox is running", "stOff": "Roblox is not running", "btnStart": "▶ Launch Roblox", "btnStop": "■ Stop Roblox", "busy": "Optimizing...", "done": "Done ✓", "i1": "Four checkboxes instead of hours of tweaking", "i2": "Everything you normally do by hand in settings and folders, the app does for you.", "r1t": "Remove extra effects", "r1d": "Turns off heavy visual effects that eat frames.", "r2t": "Optimize graphics", "r2d": "Picks settings that fit your computer.", "r3t": "Clear cache", "r3d": "Deletes Roblox junk and frees memory.", "r4t": "Boost FPS", "r4d": "Applies all selected changes with one button.", "dlH": "Download your version", "pcP": "RobloxOptimizer.exe file. Run it and optimize.", "getExe": "Download .exe", "anP": "RobloxOptimizer.apk file for your phone.", "getApk": "Download .apk", "faqH": "Frequently asked questions", "q1": "Is it free?", "a1": "Yes, downloading and using it is free.", "q2": "How do I install the .apk on Android?", "a2": "Download and open the file. If your phone asks, allow installing from this source in settings.", "q3": "Windows warns me when I run the .exe. What now?", "a3": "Click \"More info\", then \"Run anyway\". This warning appears for programs without a digital signature.", "foot": "© 2026 Roblox Optimizer. Not an official Roblox Corporation product."}};
+const $=s=>document.querySelector(s),boxes=[...document.querySelectorAll('.chk input')];
+const fpsEl=$('#fps'),ramEl=$('#ram'),apply=$('#apply'),fill=apply.querySelector('.f'),applyL=$('#applyL'),statEl=$('#stat'),launch=$('#launch');
+let lang='',fps=41,ram=5.9,busy=false,running=false;
+try{lang=localStorage.getItem('lang')||''}catch(e){}
+if(!L[lang]){const n=(navigator.language||'').slice(0,2);lang=L[n]?n:'en'}
+const t=k=>L[lang][k];
+function render(){
+  document.documentElement.lang=lang;document.title=t('title');
+  document.querySelectorAll('[data-i18n]').forEach(e=>e.innerHTML=t(e.dataset.i18n));
+  document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===lang));
+  ramEl.textContent=ram.toFixed(1)+' '+t('gb');
+  statEl.textContent=t(running?'stOn':'stOff');launch.textContent=t(running?'btnStop':'btnStart');
+  if(!busy)applyL.textContent=t('apply');
+}
+document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>{lang=b.dataset.l;try{localStorage.setItem('lang',lang)}catch(e){}render()}));
+function tween(from,to,ms,cb){const t0=performance.now();(function f(n){const k=Math.min(1,(n-t0)/ms),e=1-Math.pow(1-k,3);cb(from+(to-from)*e);if(k<1)requestAnimationFrame(f)})(t0)}
+apply.addEventListener('click',()=>{
+  if(busy)return;busy=true;
+  const on=boxes.filter(b=>b.checked);
+  const addF=on.reduce((s,b)=>s+ +b.dataset.fps,0),addR=on.reduce((s,b)=>s+ +(b.dataset.ram||0),0);
+  applyL.textContent=t('busy');
+  tween(0,100,1600,v=>fill.style.width=v+'%');
+  setTimeout(()=>{
+    const tf=41+addF,tr=5.9+addR;
+    tween(fps,tf,900,v=>fpsEl.textContent=Math.round(v));
+    tween(ram,tr,900,v=>ramEl.textContent=v.toFixed(1)+' '+t('gb'));
+    fps=tf;ram=tr;applyL.textContent=t('done');
+    setTimeout(()=>{fill.style.width='0';busy=false;applyL.textContent=t('apply')},1400);
+  },1600);
+});
+launch.addEventListener('click',()=>{running=!running;statEl.classList.toggle('ok',running);statEl.classList.toggle('off',!running);render()});
+render();
+</script>
+</body>
+</html>
